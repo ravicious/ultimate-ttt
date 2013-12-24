@@ -11,19 +11,26 @@ do -> Array::shuffle ?= ->
 Game = React.createClass({
   getInitialState: ->
     whoStarts = ["xs", "os"].shuffle()[0]
-    return {turn: whoStarts}
+    return {turn: whoStarts, currentTableId: null}
 
   nextTurnBy: ->
     currentTurn = @.state.turn
     nextTurn = if currentTurn == "xs" then "os" else "xs"
     return nextTurn
 
-  handleCellClick: ->
-    @.setState({turn: this.nextTurnBy()})
+  handleCellClick: (clickedCellId)->
+    @.setState({turn: this.nextTurnBy(), currentTableId: clickedCellId})
 
   render: ->
-    tables = [1..9].map =>
-      return Table({turn: this.state.turn, handleCellClick: this.handleCellClick})
+    tables = [1..9].map (i) =>
+      return Table(
+        {
+          turn: this.state.turn
+          tableId: i
+          currentTableId: this.state.currentTableId
+          handleCellClick: this.handleCellClick
+        }
+      )
 
     return (
       (div {className: "bigTable"}, [
@@ -34,23 +41,38 @@ Game = React.createClass({
 })
 
 Table = React.createClass({
+  isActive: ->
+    if this.props.currentTableId
+      this.props.currentTableId == this.props.tableId
+    else
+      true
+
   render: ->
-    rows = [1..3].map =>
-      return TableRow({turn: this.props.turn, handleCellClick: this.props.handleCellClick})
+    rows = [0..2].map (i) =>
+      return TableRow({
+        turn: this.props.turn
+        rowCount: i
+        handleCellClick: this.props.handleCellClick
+      })
 
     return (
-      (div {className: "col-md-4"},
-        (table {className: "smallTable table table-bordered"},
+      (div {className: "col-md-4"}, [
+        (div {className: "overlay"}) unless this.isActive(),
+        (table {className: "smallTable table table-bordered #{"active-table" if this.isActive()}"},
           (tbody {}, rows)
         )
-      )
+      ])
     )
 })
 
 TableRow = React.createClass({
   render: ->
-    cells = [1..3].map =>
-      return Cell({turn: this.props.turn, handleCellClick: this.props.handleCellClick})
+    cells = [1..3].map (i) =>
+      return Cell({
+        turn: this.props.turn
+        cellId: i + this.props.rowCount * 3
+        handleCellClick: this.props.handleCellClick
+      })
 
     return (tr {className: 'tableRow'}, cells)
 })
@@ -64,7 +86,7 @@ Cell = React.createClass({
     # if it already has an owner.
     unless this.state.owner
       @.setState {owner: this.props.turn}
-      this.props.handleCellClick()
+      this.props.handleCellClick(this.props.cellId)
 
   render: ->
     owner = this.state.owner || "none"
