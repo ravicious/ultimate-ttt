@@ -1,0 +1,33 @@
+* {
+  font-family: Lato, Helvetica, Arial, sans-serif !important;
+}
+
+/* table { */
+/*   float: left; */
+/*   margin: 30px; */
+/* } */
+
+.game .cell {
+  width: 75px;
+  height: 75px;
+  text-align: center;
+  vertical-align: middle;
+  color: black;
+  font-size: 35px;
+  overflow: hidden;
+}
+
+.game .cell:hover {
+  opacity: 0.6;
+}
+
+.game .xs, .game .os {
+}
+
+.game .xs:before {
+  content: "X";
+}
+
+.game .os:before {
+  content: "O";
+}
