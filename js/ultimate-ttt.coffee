@@ -8,27 +8,35 @@ do -> Array::shuffle ?= ->
     [@[i], @[j]] = [@[j], @[i]]
   @
 
-BigTable = React.createClass({
+Game = React.createClass({
+  nextTurnBy: ->
+    currentTurn = @.state.turn
+    nextTurn = if currentTurn == "xs" then "os" else "xs"
+    return nextTurn
+
   getInitialState: ->
     whoStarts = ["xs", "os"].shuffle()[0]
     return {turn: whoStarts}
 
+  handleCellClick: ->
+    @.setState({turn: this.nextTurnBy()})
+
   render: ->
-    smallTables = [1..9].map ->
-      return SmallTable({})
+    tables = [1..9].map =>
+      return Table({turn: this.state.turn, handleCellClick: this.handleCellClick})
 
     return (
       (div {className: "bigTable"}, [
         (h2 {}, "It's #{this.state.turn} turn!"),
-        (div {className: "row"}, smallTables)
+        (div {className: "row"}, tables)
       ])
     )
 })
 
-SmallTable = React.createClass({
+Table = React.createClass({
   render: ->
-    rows = [1..3].map ->
-      return TableRow({})
+    rows = [1..3].map =>
+      return TableRow({turn: this.props.turn, handleCellClick: this.props.handleCellClick})
 
     return (
       (div {className: "col-md-4"},
@@ -41,18 +49,29 @@ SmallTable = React.createClass({
 
 TableRow = React.createClass({
   render: ->
-    cells = [1..3].map ->
-      return Cell({})
+    cells = [1..3].map =>
+      return Cell({turn: this.props.turn, handleCellClick: this.props.handleCellClick})
 
     return (tr {className: 'tableRow'}, cells)
 })
 
 Cell = React.createClass({
+  getInitialState: ->
+    return {owner: null}
+
+  handleClick: ->
+    # There's no point in updating a cell
+    # if it already has an owner.
+    unless this.state.owner
+      @.setState {owner: this.props.turn}
+      this.props.handleCellClick()
+
   render: ->
-    return (td {className: 'cell'})
+    owner = this.state.owner || "none"
+    return (td {className: "cell #{owner}", onClick: this.handleClick})
 })
 
 React.renderComponent(
-  BigTable({}),
+  Game({}),
   document.getElementById('game')
 )
