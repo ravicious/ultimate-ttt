@@ -9,14 +9,14 @@ do -> Array::shuffle ?= ->
   @
 
 Game = React.createClass({
+  getInitialState: ->
+    whoStarts = ["xs", "os"].shuffle()[0]
+    return {turn: whoStarts}
+
   nextTurnBy: ->
     currentTurn = @.state.turn
     nextTurn = if currentTurn == "xs" then "os" else "xs"
     return nextTurn
-
-  getInitialState: ->
-    whoStarts = ["xs", "os"].shuffle()[0]
-    return {turn: whoStarts}
 
   handleCellClick: ->
     @.setState({turn: this.nextTurnBy()})
