@@ -44,7 +44,7 @@ class TicTacToeReferee
     if winner
       winner
     else
-      # if board is full
+      # if there's no empty cells
       if @state.indexOf(null) == -1
         "tie"
       else
