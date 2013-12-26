@@ -63,7 +63,7 @@ Table = React.createClass({
     return (
       (div {className: "col-md-4"}, [
         (div {className: "overlay"}) unless @.isActive(),
-        (table {className: "smallTable table table-bordered #{"active-table" if @.isActive()}"},
+        (table {className: "small-table table table-bordered #{"active-table box-shadow" if @.isActive()}"},
           (tbody {}, [
             (tr {}, renderCells([1..3])),
             (tr {}, renderCells([4..6])),
@@ -82,12 +82,12 @@ Cell = React.createClass({
     # There's no point in updating a cell
     # if it already has an owner.
     unless @.state.owner
-      @.setState {owner: @.props.turn}
+      @.setState {owner: @.props.turn, lastClicked: true}
       @.props.handleCellClick(@.props.cellId)
 
   render: ->
     owner = @.state.owner || "none"
-    return (td {className: "cell #{owner}", onClick: @.handleClick})
+    return (td {className: "cell #{owner} #{"last-clicked box-shadow" if @.state.lastClicked}", onClick: @.handleClick})
 })
 
 React.renderComponent(

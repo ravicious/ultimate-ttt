@@ -2,6 +2,13 @@
   font-family: Lato, Helvetica, Arial, sans-serif !important;
 }
 
+.box-shadow {
+  box-shadow: 3px 3px #2c3e50, 0 3px #2c3e50, 3px 0 #2c3e50, -2px -2px #2c3e50, 3px -2px #2c3e50, -2px 3px #2c3e50;
+}
+
+.game .table-bordered td {
+  border-color: #2c3e50;
+}
 
 .game .cell {
   width: 60px;
@@ -18,10 +25,6 @@
   position: absolute;
   left: 0px;
   top: 0px;
-}
-
-.game .active-table {
-  background-color: green;
 }
 
 .game .xs:before {
