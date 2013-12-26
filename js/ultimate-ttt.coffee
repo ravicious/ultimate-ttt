@@ -60,8 +60,13 @@ Game = React.createClass({
     nextTurn = if currentTurn == "xs" then "os" else "xs"
     return nextTurn
 
-  handleTableClick: (clickedCellId)->
-    @.setState({turn: @.nextTurnBy(), currentTableId: clickedCellId})
+  handleTableClick: (data)->
+    if data.isTableFinished
+      currentTableId = null
+    else
+      currentTableId = data.clickedCellId
+
+    @.setState({turn: @.nextTurnBy(), currentTableId: currentTableId})
 
   render: ->
     tables = [0..8].map (i) =>
@@ -83,14 +88,34 @@ Game = React.createClass({
 })
 
 Table = React.createClass({
+  getInitialState: ->
+    return {cellOwners: [null, null, null, null, null, null, null, null, null]}
+
+  gameState: ->
+    referee = new TicTacToeReferee @.state.cellOwners
+    referee.decision()
+
   isActive: ->
-    unless @.props.currentTableId == null
-      @.props.currentTableId == @.props.tableId
+    if @.isFinished()
+      false
     else
-      true
+      unless @.props.currentTableId == null
+        @.props.currentTableId == @.props.tableId
+      else
+        true
+
+  isFinished: ->
+    @.gameState() != "continue"
+
+  setCellOwner: (owner, cellId) ->
+    state = @.state
+    state.cellOwners[cellId] = owner
+    @.setState state
 
   handleCellClick: (cellId) ->
-    @.props.handleTableClick(cellId)
+    @.setCellOwner @.props.turn, cellId
+
+    @.props.handleTableClick({clickedCellId: cellId, isTableFinished: @.isFinished()})
 
   render: ->
     cellProps = (count) =>
@@ -98,6 +123,7 @@ Table = React.createClass({
         turn: @.props.turn
         cellId: count
         handleCellClick: @.handleCellClick
+        owner: @.state.cellOwners[count]
       }
 
     renderCells = (range) ->
@@ -107,6 +133,7 @@ Table = React.createClass({
 
     return (
       (div {className: "col-md-4"}, [
+        (h3 {}, @.gameState()),
         (div {className: "overlay"}) unless @.isActive(),
         (table {className: "small-table table table-bordered #{"active-table box-shadow" if @.isActive()}"},
           (tbody {}, [
@@ -120,19 +147,15 @@ Table = React.createClass({
 })
 
 Cell = React.createClass({
-  getInitialState: ->
-    return {owner: null}
-
   handleClick: ->
     # There's no point in updating a cell
     # if it already has an owner.
-    unless @.state.owner
-      @.setState {owner: @.props.turn, lastClicked: true}
+    unless @.props.owner
       @.props.handleCellClick(@.props.cellId)
 
   render: ->
-    owner = @.state.owner || "none"
-    return (td {className: "cell #{owner} #{"last-clicked box-shadow" if @.state.lastClicked}", onClick: @.handleClick})
+    owner = @.props.owner || "none"
+    return (td {className: "cell #{owner}", onClick: @.handleClick})
 })
 
 React.renderComponent(
