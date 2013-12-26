@@ -53,7 +53,7 @@ class TicTacToeReferee
 Game = React.createClass({
   getInitialState: ->
     whoStarts = ["xs", "os"].shuffle()[0]
-    return {turn: whoStarts, currentTableId: null}
+    return {turn: whoStarts, currentTableId: null, finishedTables: []}
 
   nextTurnBy: ->
     currentTurn = @.state.turn
@@ -61,12 +61,22 @@ Game = React.createClass({
     return nextTurn
 
   handleTableClick: (data)->
-    if data.isTableFinished
-      currentTableId = null
-    else
-      currentTableId = data.clickedCellId
+    state = @.state
 
-    @.setState({turn: @.nextTurnBy(), currentTableId: currentTableId})
+    # if table isn't finished
+    if @.state.finishedTables.indexOf(data.nextTableId) == -1
+      currentTableId = data.nextTableId
+    else
+      currentTableId = null
+
+    state.turn = @.nextTurnBy()
+    state.currentTableId = currentTableId
+    @.setState state
+
+  markTableAsFinished: (tableId) ->
+    state = @.state
+    state.finishedTables.push tableId
+    @.setState state
 
   render: ->
     tables = [0..8].map (i) =>
@@ -76,6 +86,7 @@ Game = React.createClass({
           tableId: i
           currentTableId: @.state.currentTableId
           handleTableClick: @.handleTableClick
+          markTableAsFinished: @.markTableAsFinished
         }
       )
 
@@ -114,8 +125,9 @@ Table = React.createClass({
 
   handleCellClick: (cellId) ->
     @.setCellOwner @.props.turn, cellId
+    @.props.markTableAsFinished(@.props.tableId) if @.isFinished()
 
-    @.props.handleTableClick({clickedCellId: cellId, isTableFinished: @.isFinished()})
+    @.props.handleTableClick({nextTableId: cellId, tableId: @.props.tableId})
 
   render: ->
     cellProps = (count) =>
