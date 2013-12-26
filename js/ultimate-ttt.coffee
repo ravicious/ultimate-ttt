@@ -22,7 +22,7 @@ Game = React.createClass({
     @.setState({turn: @.nextTurnBy(), currentTableId: clickedCellId})
 
   render: ->
-    tables = [1..9].map (i) =>
+    tables = [0..8].map (i) =>
       return Table(
         {
           turn: @.state.turn
@@ -42,7 +42,7 @@ Game = React.createClass({
 
 Table = React.createClass({
   isActive: ->
-    if @.props.currentTableId
+    unless @.props.currentTableId == null
       @.props.currentTableId == @.props.tableId
     else
       true
@@ -68,9 +68,9 @@ Table = React.createClass({
         (div {className: "overlay"}) unless @.isActive(),
         (table {className: "small-table table table-bordered #{"active-table box-shadow" if @.isActive()}"},
           (tbody {}, [
-            (tr {}, renderCells([1..3])),
-            (tr {}, renderCells([4..6])),
-            (tr {}, renderCells([7..9]))
+            (tr {}, renderCells([0..2])),
+            (tr {}, renderCells([3..5])),
+            (tr {}, renderCells([6..8]))
           ])
         )
       ])
