@@ -143,9 +143,11 @@ Table = React.createClass({
         return Cell(cellProps(i))
       return cells
 
+    progress = if @.isFinished() then @.gameState() else "in progress"
+
     return (
       (div {className: "col-md-4"}, [
-        (h3 {}, @.gameState()),
+        (h3 {}, progress),
         (div {className: "overlay"}) unless @.isActive(),
         (table {className: "small-table table table-bordered #{"active-table box-shadow" if @.isActive()}"},
           (tbody {}, [
