@@ -4,17 +4,12 @@
 
 
 .game .cell {
-  width: 75px;
-  height: 75px;
+  width: 60px;
+  height: 60px;
   text-align: center;
   vertical-align: middle;
   color: black;
-  font-size: 35px;
-  overflow: hidden;
-}
-
-.game .cell:hover {
-  opacity: 0.6;
+  font-size: 30px;
 }
 
 .game .overlay {
