@@ -33,9 +33,9 @@ Game = React.createClass({
       )
 
     return (
-      (div {className: "bigTable"}, [
+      (div {className: "big-table"}, [
         (h2 {}, "It's #{@.state.turn} turn!"),
-        (div {className: "row"}, tables)
+        (div {}, tables)
       ])
     )
 })
