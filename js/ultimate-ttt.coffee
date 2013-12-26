@@ -8,6 +8,13 @@ do -> Array::shuffle ?= ->
     [@[i], @[j]] = [@[j], @[i]]
   @
 
+# http://stackoverflow.com/a/17903018/742872
+do -> Array::uniq ?= ->
+  @.reduce (p, c) ->
+    p.push(c) if (p.indexOf(c) < 0)
+    p
+  , []
+
 Game = React.createClass({
   getInitialState: ->
     whoStarts = ["xs", "os"].shuffle()[0]
