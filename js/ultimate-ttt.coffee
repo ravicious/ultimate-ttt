@@ -15,6 +15,41 @@ do -> Array::uniq ?= ->
     p
   , []
 
+class TicTacToeReferee
+  constructor: (@state) ->
+
+  checkIfFieldsAreEqual: (id1, id2, id3) ->
+    unique = [@state[id1], @state[id2], @state[id3]].uniq()
+    if unique.length == 1 and unique[0] != null
+      true
+    else
+      false
+
+  decision: ->
+    winningStates = [
+      [0, 1, 2], [0, 3, 6], [0, 4, 8],
+      [1, 4, 7],
+      [2, 5, 8], [2, 4, 6],
+      [3, 4, 5],
+      [6, 7, 8]
+    ]
+
+    winner = null
+
+    for states in winningStates
+      if @checkIfFieldsAreEqual(states[0], states[1], states[2])
+        winner = @state[states[0]]
+        break
+
+    if winner
+      winner
+    else
+      # if board is full
+      if @state.indexOf(null) == -1
+        "tie"
+      else
+        "continue"
+
 Game = React.createClass({
   getInitialState: ->
     whoStarts = ["xs", "os"].shuffle()[0]
