@@ -48,33 +48,30 @@ Table = React.createClass({
       true
 
   render: ->
-    rows = [0..2].map (i) =>
-      return TableRow({
+    cellProps = (count) =>
+      return {
         turn: this.props.turn
-        rowCount: i
+        cellId: count
         handleCellClick: this.props.handleCellClick
-      })
+      }
+
+    renderCells = (range) ->
+      cells = range.map (i) =>
+        return Cell(cellProps(i))
+      return cells
 
     return (
       (div {className: "col-md-4"}, [
         (div {className: "overlay"}) unless this.isActive(),
         (table {className: "smallTable table table-bordered #{"active-table" if this.isActive()}"},
-          (tbody {}, rows)
+          (tbody {}, [
+            (tr {}, renderCells([1..3])),
+            (tr {}, renderCells([4..6])),
+            (tr {}, renderCells([7..9]))
+          ])
         )
       ])
     )
-})
-
-TableRow = React.createClass({
-  render: ->
-    cells = [1..3].map (i) =>
-      return Cell({
-        turn: this.props.turn
-        cellId: i + this.props.rowCount * 3
-        handleCellClick: this.props.handleCellClick
-      })
-
-    return (tr {className: 'tableRow'}, cells)
 })
 
 Cell = React.createClass({
