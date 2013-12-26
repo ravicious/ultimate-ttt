@@ -19,22 +19,22 @@ Game = React.createClass({
     return nextTurn
 
   handleCellClick: (clickedCellId)->
-    @.setState({turn: this.nextTurnBy(), currentTableId: clickedCellId})
+    @.setState({turn: @.nextTurnBy(), currentTableId: clickedCellId})
 
   render: ->
     tables = [1..9].map (i) =>
       return Table(
         {
-          turn: this.state.turn
+          turn: @.state.turn
           tableId: i
-          currentTableId: this.state.currentTableId
-          handleCellClick: this.handleCellClick
+          currentTableId: @.state.currentTableId
+          handleCellClick: @.handleCellClick
         }
       )
 
     return (
       (div {className: "bigTable"}, [
-        (h2 {}, "It's #{this.state.turn} turn!"),
+        (h2 {}, "It's #{@.state.turn} turn!"),
         (div {className: "row"}, tables)
       ])
     )
@@ -42,17 +42,17 @@ Game = React.createClass({
 
 Table = React.createClass({
   isActive: ->
-    if this.props.currentTableId
-      this.props.currentTableId == this.props.tableId
+    if @.props.currentTableId
+      @.props.currentTableId == @.props.tableId
     else
       true
 
   render: ->
     cellProps = (count) =>
       return {
-        turn: this.props.turn
+        turn: @.props.turn
         cellId: count
-        handleCellClick: this.props.handleCellClick
+        handleCellClick: @.props.handleCellClick
       }
 
     renderCells = (range) ->
@@ -62,8 +62,8 @@ Table = React.createClass({
 
     return (
       (div {className: "col-md-4"}, [
-        (div {className: "overlay"}) unless this.isActive(),
-        (table {className: "smallTable table table-bordered #{"active-table" if this.isActive()}"},
+        (div {className: "overlay"}) unless @.isActive(),
+        (table {className: "smallTable table table-bordered #{"active-table" if @.isActive()}"},
           (tbody {}, [
             (tr {}, renderCells([1..3])),
             (tr {}, renderCells([4..6])),
@@ -81,13 +81,13 @@ Cell = React.createClass({
   handleClick: ->
     # There's no point in updating a cell
     # if it already has an owner.
-    unless this.state.owner
-      @.setState {owner: this.props.turn}
-      this.props.handleCellClick(this.props.cellId)
+    unless @.state.owner
+      @.setState {owner: @.props.turn}
+      @.props.handleCellClick(@.props.cellId)
 
   render: ->
-    owner = this.state.owner || "none"
-    return (td {className: "cell #{owner}", onClick: this.handleClick})
+    owner = @.state.owner || "none"
+    return (td {className: "cell #{owner}", onClick: @.handleClick})
 })
 
 React.renderComponent(
