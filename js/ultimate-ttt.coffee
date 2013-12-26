@@ -18,7 +18,7 @@ Game = React.createClass({
     nextTurn = if currentTurn == "xs" then "os" else "xs"
     return nextTurn
 
-  handleCellClick: (clickedCellId)->
+  handleTableClick: (clickedCellId)->
     @.setState({turn: @.nextTurnBy(), currentTableId: clickedCellId})
 
   render: ->
@@ -28,7 +28,7 @@ Game = React.createClass({
           turn: @.state.turn
           tableId: i
           currentTableId: @.state.currentTableId
-          handleCellClick: @.handleCellClick
+          handleTableClick: @.handleTableClick
         }
       )
 
@@ -47,12 +47,15 @@ Table = React.createClass({
     else
       true
 
+  handleCellClick: (cellId) ->
+    @.props.handleTableClick(cellId)
+
   render: ->
     cellProps = (count) =>
       return {
         turn: @.props.turn
         cellId: count
-        handleCellClick: @.props.handleCellClick
+        handleCellClick: @.handleCellClick
       }
 
     renderCells = (range) ->
