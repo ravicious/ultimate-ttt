@@ -11,7 +11,7 @@ do -> Array::uniq ?= ->
 class TicTacToeReferee
   constructor: (@fieldValues) ->
 
-  validFields: ["xs", "os"]
+  validFields: ["X", "O"]
 
   areFieldsEqual: (id1, id2, id3) ->
     unique = [@fieldValues[id1], @fieldValues[id2], @fieldValues[id3]].uniq()
@@ -52,7 +52,7 @@ class TicTacToeReferee
 Game = React.createClass({
   getInitialState: ->
     return {
-      turn: "os"
+      turn: "O"
       currentTableId: null
       tableStates: [null, null, null, null, null, null, null, null, null]
     }
@@ -66,7 +66,7 @@ Game = React.createClass({
 
   nextTurnBy: ->
     currentTurn = @.state.turn
-    nextTurn = if currentTurn == "xs" then "os" else "xs"
+    nextTurn = if currentTurn == "X" then "O" else "X"
     return nextTurn
 
   handleTableClick: (data)->

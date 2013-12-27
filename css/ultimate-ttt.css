@@ -89,10 +89,10 @@ body {
   line-height: 180px;
 }
 
-.game .xs:before {
+.game .X:before {
   content: "X";
 }
 
-.game .os:before {
+.game .O:before {
   content: "O";
 }
