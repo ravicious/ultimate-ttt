@@ -1,13 +1,6 @@
 {div, h1, h2, h3, textarea, span, form, input, br,
 table, tbody, tr, th, td, ul, li, a} = React.DOM
 
-# http://coffeescriptcookbook.com/chapters/arrays/shuffling-array-elements
-do -> Array::shuffle ?= ->
-  for i in [@length-1..1]
-    j = Math.floor Math.random() * (i + 1)
-    [@[i], @[j]] = [@[j], @[i]]
-  @
-
 # http://stackoverflow.com/a/17903018/742872
 do -> Array::uniq ?= ->
   @.reduce (p, c) ->
@@ -58,9 +51,8 @@ class TicTacToeReferee
 
 Game = React.createClass({
   getInitialState: ->
-    whoStarts = ["xs", "os"].shuffle()[0]
     return {
-      turn: whoStarts
+      turn: "os"
       currentTableId: null
       tableStates: [null, null, null, null, null, null, null, null, null]
     }
