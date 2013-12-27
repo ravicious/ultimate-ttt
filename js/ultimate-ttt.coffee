@@ -50,10 +50,40 @@ class SmallTicTacToeReferee
       else
         "continue"
 
+class BigTicTacToeReferee
+  constructor: (@finishedTables, @winCount) ->
+
+  decision: ->
+    xs = @winCount.xs
+    os = @winCount.os
+    tie = @winCount.tie
+
+    if xs > 4
+      "xs"
+    else if os > 4
+      "os"
+    else
+      if @finishedTables.length == 9
+        if xs > os
+          "xs"
+        else if os > xs
+          "os"
+        else
+          "tie"
+      else
+        "continue"
+
 Game = React.createClass({
   getInitialState: ->
     whoStarts = ["xs", "os"].shuffle()[0]
-    return {turn: whoStarts, currentTableId: null, finishedTables: []}
+    return {turn: whoStarts, currentTableId: null, finishedTables: [], winCount: {xs: 0, os: 0, tie: 0}}
+
+  gameState: ->
+    referee = new BigTicTacToeReferee @.state.finishedTables, @.state.winCount
+    referee.decision()
+
+  isFinished: ->
+    @.gameState() != "continue"
 
   nextTurnBy: ->
     currentTurn = @.state.turn
