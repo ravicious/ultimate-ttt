@@ -15,15 +15,20 @@ do -> Array::uniq ?= ->
     p
   , []
 
-class SmallTicTacToeReferee
-  constructor: (@state) ->
+class TicTacToeReferee
+  constructor: (@fieldValues) ->
 
-  checkIfFieldsAreEqual: (id1, id2, id3) ->
-    unique = [@state[id1], @state[id2], @state[id3]].uniq()
-    if unique.length == 1 and unique[0] != null
+  validFields: ["xs", "os"]
+
+  areFieldsEqual: (id1, id2, id3) ->
+    unique = [@fieldValues[id1], @fieldValues[id2], @fieldValues[id3]].uniq()
+    if unique.length == 1
       true
     else
       false
+
+  anyEmptyCells: ->
+    null in @fieldValues
 
   decision: ->
     winningStates = [
@@ -37,50 +42,32 @@ class SmallTicTacToeReferee
     winner = null
 
     for states in winningStates
-      if @checkIfFieldsAreEqual(states[0], states[1], states[2])
-        winner = @state[states[0]]
+      cellValue = @fieldValues[states[0]]
+
+      if cellValue in @validFields and @areFieldsEqual(states[0], states[1], states[2])
+        winner = cellValue
         break
 
     if winner
       winner
     else
-      # if there's no empty cells
-      if @state.indexOf(null) == -1
+      if @anyEmptyCells()
+        "continue"
+      else
         "tie"
-      else
-        "continue"
-
-class BigTicTacToeReferee
-  constructor: (@finishedTables, @winCount) ->
-
-  decision: ->
-    xs = @winCount.xs
-    os = @winCount.os
-    tie = @winCount.tie
-
-    if xs > 4
-      "xs"
-    else if os > 4
-      "os"
-    else
-      if @finishedTables.length == 9
-        if xs > os
-          "xs"
-        else if os > xs
-          "os"
-        else
-          "tie"
-      else
-        "continue"
 
 Game = React.createClass({
   getInitialState: ->
     whoStarts = ["xs", "os"].shuffle()[0]
-    return {turn: whoStarts, currentTableId: null, finishedTables: [], winCount: {xs: 0, os: 0, tie: 0}}
+    return {
+      turn: whoStarts
+      currentTableId: null
+      tableStates: [null, null, null, null, null, null, null, null, null]
+    }
 
   gameState: ->
-    referee = new BigTicTacToeReferee @.state.finishedTables, @.state.winCount
-    referee.decision()
+    referee = new TicTacToeReferee @.state.tableStates
+    dec = referee.decision()
 
   isFinished: ->
     @.gameState() != "continue"
@@ -95,7 +82,7 @@ Game = React.createClass({
       state = @.state
 
       # if table isn't finished
-      if @.state.finishedTables.indexOf(data.nextTableId) == -1
+      if @.state.tableStates[data.nextTableId] == null
         currentTableId = data.nextTableId
       else
         currentTableId = null
@@ -106,9 +93,7 @@ Game = React.createClass({
 
   markTableAsFinished: (tableId, gameState) ->
     state = @.state
-    state.finishedTables.push tableId
-    state.winCount[gameState] += 1
-
+    state.tableStates[tableId] = gameState
     @.setState state
 
   progress: ->
@@ -153,7 +138,7 @@ Table = React.createClass({
     return {cellOwners: [null, null, null, null, null, null, null, null, null]}
 
   gameState: ->
-    referee = new SmallTicTacToeReferee @.state.cellOwners
+    referee = new TicTacToeReferee @.state.cellOwners
     referee.decision()
 
   isActive: ->
