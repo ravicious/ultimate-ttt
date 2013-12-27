@@ -7,7 +7,7 @@ body {
 }
 
 .box-shadow {
-  box-shadow: 3px 3px #2c3e50, 0 3px #2c3e50, 3px 0 #2c3e50, -2px -2px #2c3e50, 3px -2px #2c3e50, -2px 3px #2c3e50;
+  box-shadow: 5px 5px #2ecc71, 0 5px #2ecc71, 5px 0 #2ecc71, -3px -3px #2ecc71, 5px -3px #2ecc71, -3px 5px #2ecc71;
 }
 
 .game .info h1, .game .info h2, .game .info h3 {
