@@ -17,8 +17,17 @@ body {
 
 .game .game-row {
   clear: left;
-  margin-top: 30px;
   height: 180px;
+}
+
+/* http://stackoverflow.com/a/8539107/742872
+   set margin to 5px for first element with class .game-row */
+.big-table > .game-row {
+  margin-top: 5px;
+}
+
+.big-table > .game-row ~ .game-row {
+  margin-top: 30px;
 }
 
 .game .table-bordered td {
