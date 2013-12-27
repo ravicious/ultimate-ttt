@@ -52,7 +52,7 @@ class TicTacToeReferee
 Game = React.createClass({
   getInitialState: ->
     return {
-      turn: "O"
+      turn: "X"
       currentTableId: null
       tableStates: [null, null, null, null, null, null, null, null, null]
     }
