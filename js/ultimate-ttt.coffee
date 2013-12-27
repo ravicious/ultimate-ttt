@@ -70,9 +70,9 @@ Game = React.createClass({
     return nextTurn
 
   handleTableClick: (data)->
-    unless @.isFinished()
-      state = @.state
+    state = @.state
 
+    unless @.isFinished()
       # if table isn't finished
       if @.state.tableStates[data.nextTableId] == null
         currentTableId = data.nextTableId
@@ -81,7 +81,11 @@ Game = React.createClass({
 
       state.turn = @.nextTurnBy()
       state.currentTableId = currentTableId
-      @.setState state
+    else
+      # make all tables non-clickable
+      state.currentTableId = 1337
+    @.setState state
+
 
   markTableAsFinished: (tableId, gameState) ->
     state = @.state
