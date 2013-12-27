@@ -79,21 +79,23 @@ Game = React.createClass({
     @.setState state
 
   render: ->
-    tables = [0..8].map (i) =>
-      return Table(
-        {
+    renderTables = (range) =>
+      return range.map (i) =>
+        return Table({
           turn: @.state.turn
           tableId: i
           currentTableId: @.state.currentTableId
           handleTableClick: @.handleTableClick
           markTableAsFinished: @.markTableAsFinished
-        }
-      )
+        })
 
     return (
       (div {className: "big-table"}, [
-        (h2 {}, "It's #{@.state.turn} turn!"),
-        (div {}, tables)
+        (h1 {className: "info"}, "Ultimate TTT"),
+        (h2 {className: "info"}, "It's #{@.state.turn} turn!"),
+        (div {className: "game-row"}, renderTables([0..2])),
+        (div {className: "game-row"}, renderTables([3..5])),
+        (div {className: "game-row"}, renderTables([6..8]))
       ])
     )
 })
@@ -143,12 +145,19 @@ Table = React.createClass({
         return Cell(cellProps(i))
       return cells
 
-    progress = if @.isFinished() then @.gameState() else "in progress"
+    renderOverlay = =>
+      className = "overlay"
+      content = null
+
+      if @.isFinished()
+        className += " finished"
+        content = @.gameState()
+
+      return (div {className: className}, content)
 
     return (
-      (div {className: "col-md-4"}, [
-        (h3 {}, progress),
-        (div {className: "overlay"}) unless @.isActive(),
+      (div {className: "table-container"}, [
+        renderOverlay() unless @.isActive(),
         (table {className: "small-table table table-bordered #{"active-table box-shadow" if @.isActive()}"},
           (tbody {}, [
             (tr {}, renderCells([0..2])),
