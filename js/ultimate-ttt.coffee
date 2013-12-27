@@ -91,22 +91,34 @@ Game = React.createClass({
     return nextTurn
 
   handleTableClick: (data)->
-    state = @.state
+    unless @.isFinished()
+      state = @.state
 
-    # if table isn't finished
-    if @.state.finishedTables.indexOf(data.nextTableId) == -1
-      currentTableId = data.nextTableId
-    else
-      currentTableId = null
+      # if table isn't finished
+      if @.state.finishedTables.indexOf(data.nextTableId) == -1
+        currentTableId = data.nextTableId
+      else
+        currentTableId = null
 
-    state.turn = @.nextTurnBy()
-    state.currentTableId = currentTableId
-    @.setState state
+      state.turn = @.nextTurnBy()
+      state.currentTableId = currentTableId
+      @.setState state
 
-  markTableAsFinished: (tableId) ->
+  markTableAsFinished: (tableId, gameState) ->
     state = @.state
     state.finishedTables.push tableId
+    state.winCount[gameState] += 1
+
     @.setState state
+
+  progress: ->
+    if @.isFinished()
+      if @.gameState() == "tie"
+        "It's a tie!"
+      else
+        "#{@.gameState()} won!"
+    else
+      "It's #{@.state.turn} turn!"
 
   render: ->
     renderTables = (range) =>
@@ -122,7 +134,7 @@ Game = React.createClass({
     return (
       (div {className: "big-table"}, [
         (h1 {className: "info"}, "Ultimate TTT"),
-        (h2 {className: "info"}, "It's #{@.state.turn} turn!"),
+        (h2 {className: "info"}, @.progress()),
         (div {className: "game-row"}, renderTables([0..2])),
         (div {className: "game-row"}, renderTables([3..5])),
         (div {className: "game-row"}, renderTables([6..8]))
@@ -157,7 +169,8 @@ Table = React.createClass({
 
   handleCellClick: (cellId) ->
     @.setCellOwner @.props.turn, cellId
-    @.props.markTableAsFinished(@.props.tableId) if @.isFinished()
+
+    @.props.markTableAsFinished(@.props.tableId, @.gameState()) if @.isFinished()
 
     @.props.handleTableClick({nextTableId: cellId, tableId: @.props.tableId})
 
