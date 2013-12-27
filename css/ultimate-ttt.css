@@ -15,12 +15,12 @@ body {
   margin-right: 20px;
 }
 
-.game .info .rules {
+.game .info a {
   color: inherit;
   text-decoration: underline;
 }
 
-.game .info .rules:hover {
+.game .info a:hover {
   color: #2d8ccb;
 }
 

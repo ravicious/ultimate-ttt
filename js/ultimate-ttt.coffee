@@ -114,9 +114,11 @@ Game = React.createClass({
           (h1 {}, "Ultimate TTT")
           (a {
             href: "http://mathwithbaddrawings.com/2013/06/16/ultimate-tic-tac-toe/"
-            className: "rules"
-          }, (h3 {}, "Read rules")),
+          }, (h3 {}, "Read the rules")),
           (h2 {}, @.progress()),
+          (a {
+            href: ""
+          }, (h3 {}, "Restart the game")) if @.isFinished(),
         ])
         (div {className: "game-row"}, renderTables([0..2])),
         (div {className: "game-row"}, renderTables([3..5])),
