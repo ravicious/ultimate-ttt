@@ -1,5 +1,5 @@
 {div, h1, h2, h3, textarea, span, form, input, br,
-table, tbody, tr, th, td, ul, li} = React.DOM
+table, tbody, tr, th, td, ul, li, a} = React.DOM
 
 # http://coffeescriptcookbook.com/chapters/arrays/shuffling-array-elements
 do -> Array::shuffle ?= ->
@@ -133,8 +133,14 @@ Game = React.createClass({
 
     return (
       (div {className: "big-table"}, [
-        (h1 {className: "info"}, "Ultimate TTT"),
-        (h2 {className: "info"}, @.progress()),
+        (div {className: "info"}, [
+          (h1 {}, "Ultimate TTT")
+          (a {
+            href: "http://mathwithbaddrawings.com/2013/06/16/ultimate-tic-tac-toe/"
+            className: "rules"
+          }, (h3 {}, "Read rules")),
+          (h2 {}, @.progress()),
+        ])
         (div {className: "game-row"}, renderTables([0..2])),
         (div {className: "game-row"}, renderTables([3..5])),
         (div {className: "game-row"}, renderTables([6..8]))

@@ -10,9 +10,18 @@ body {
   box-shadow: 3px 3px #2c3e50, 0 3px #2c3e50, 3px 0 #2c3e50, -2px -2px #2c3e50, 3px -2px #2c3e50, -2px 3px #2c3e50;
 }
 
-.game .info {
+.game .info h1, .game .info h2, .game .info h3 {
   display: inline;
   margin-right: 20px;
+}
+
+.game .info .rules {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.game .info .rules:hover {
+  color: #2d8ccb;
 }
 
 .game .game-row {
