@@ -15,7 +15,7 @@ do -> Array::uniq ?= ->
     p
   , []
 
-class TicTacToeReferee
+class SmallTicTacToeReferee
   constructor: (@state) ->
 
   checkIfFieldsAreEqual: (id1, id2, id3) ->
@@ -105,7 +105,7 @@ Table = React.createClass({
     return {cellOwners: [null, null, null, null, null, null, null, null, null]}
 
   gameState: ->
-    referee = new TicTacToeReferee @.state.cellOwners
+    referee = new SmallTicTacToeReferee @.state.cellOwners
     referee.decision()
 
   isActive: ->
